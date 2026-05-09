@@ -9,7 +9,27 @@ class AuthController {
 
   async login(req, res) {
     const result = await authService.login(req.body);
+    const { refreshToken } = result;
+    result.refreshToken = undefined;
+    res.cookie("refreshToken", refreshToken, {
+      httpOnly: true,
+      secure: true, // enable in production (https)
+      sameSite: "strict",
+    });
     return successResponse(res, result, "Login successful", 200);
+  }
+
+  async logout(req, res) {
+    const userId = req.user.id;
+    await authService.logout(userId);
+    res.clearCookie("refreshToken");
+    return successResponse(res, null, "Logged out successfully", 200);
+  }
+
+  async refresh(req, res) {
+    const token = req.cookies.refreshToken;
+    const accessToken = authService.refreshAccessToken(token);
+    return successResponse(res, { accessToken }, "Access token refreshed", 200);
   }
 }
 

@@ -24,6 +24,14 @@ class UserRepository {
     console.log(user);
     return user.comparePassword(userPassword);
   }
+
+  updateRefreshToken(userId, token) {
+    return User.findByIdAndUpdate(
+      userId,
+      { refreshToken: token },
+      { new: true },
+    );
+  }
 }
 
 export default new UserRepository();
