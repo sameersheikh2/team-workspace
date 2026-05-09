@@ -7,7 +7,6 @@ class AuthService {
   async signup(user) {
     const { name, email, password, role } = user;
     const isExist = await UserRepo.findByEmail(email);
-    console.log(isExist);
 
     if (isExist) {
       throw new ValidationError("Validation failed.", {
@@ -20,8 +19,9 @@ class AuthService {
         role: "Role does not exist.",
       });
     }
-
-    return await UserRepo.create(user);
+    const newUser = await UserRepo.create(user);
+    newUser.password = undefined;
+    return newUser;
   }
 
   async login({ email, password }) {
@@ -39,7 +39,7 @@ class AuthService {
       });
     }
 
-    const isMatch = UserRepo.comparePassword(user._id, password);
+    const isMatch = await UserRepo.comparePassword(user._id, password);
     if (!isMatch) {
       throw new ValidationError("Invalid Credentials.", {
         password: "Invalid Credentails or user does not exist.",
@@ -49,6 +49,28 @@ class AuthService {
     const refreshToken = this.generateRefreshToken(user);
     user.password = undefined;
     return { user, accessToken, refreshToken };
+  }
+
+  async logout(userId) {
+    // Optional: Invalidate refresh token in database for extra security
+    await UserRepo.updateRefreshToken(userId, null);
+  }
+
+  refreshAccessToken(token) {
+    if (!token) {
+      throw new AuthError("No refresh token provided");
+    }
+
+    try {
+      const decoded = jwt.verify(token, config.jwtRefreshSecret);
+      const newAccessToken = this.generateAccessToken(decoded);
+      return newAccessToken;
+    } catch (err) {
+      if (err.name === "TokenExpiredError") {
+        throw new AuthError("Refresh token expired. Please login again.");
+      }
+      throw new AuthError("Invalid refresh token");
+    }
   }
 
   generateAccessToken(user) {

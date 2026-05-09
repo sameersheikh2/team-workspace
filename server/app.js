@@ -1,6 +1,6 @@
 import express from "express";
 import { NotFoundError } from "./src/utils/globalError.js";
-import { errorHandler } from "./src/middleware/apiResponse.js";
+import { errorHandler, successResponse } from "./src/middleware/apiResponse.js";
 import cors from "cors";
 import helmet from "helmet";
 import connectDB from "./src/config/db.js";
@@ -8,6 +8,8 @@ import cookieParser from "cookie-parser";
 import limiter from "./src/middleware/rateLimiter.js";
 import config from "./src/config/env.js";
 import authRouter from "./src/routes/authRoutes.js";
+import { auth } from "./src/middleware/auth.js";
+import asyncWrapper from "./src/utils/asyncHandler.js";
 
 const app = express();
 
