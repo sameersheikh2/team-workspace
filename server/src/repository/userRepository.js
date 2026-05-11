@@ -21,7 +21,6 @@ class UserRepository {
   async comparePassword(userId, userPassword) {
     const user = await User.findById(userId).select("+password");
     if (!user) return false;
-    console.log(user);
     return user.comparePassword(userPassword);
   }
 

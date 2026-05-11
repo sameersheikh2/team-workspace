@@ -7,9 +7,12 @@ import connectDB from "./src/config/db.js";
 import cookieParser from "cookie-parser";
 import limiter from "./src/middleware/rateLimiter.js";
 import config from "./src/config/env.js";
+import workspaceRoute from "./src/routes/workspaceRoutes.js";
 import authRouter from "./src/routes/authRoutes.js";
 import { auth } from "./src/middleware/auth.js";
+
 import asyncWrapper from "./src/utils/asyncHandler.js";
+import path from "path";
 
 const app = express();
 
@@ -33,6 +36,7 @@ app.get("/api/health", (req, res) => {
 });
 
 app.use("/api/auth", authRouter);
+app.use("/api/workspace", workspaceRoute);
 
 app.use("/", (req, res, next) => {
   next(new NotFoundError(`Route`));

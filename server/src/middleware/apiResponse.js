@@ -1,6 +1,7 @@
 import {
   AuthError,
   AuthorizationError,
+  ConflictError,
   DatabaseError,
   NotFoundError,
   ValidationError,
@@ -21,6 +22,13 @@ export function errorHandler(err, req, res, next) {
       error: err.message,
       code: err.code,
       fields: err.fields,
+    });
+  }
+
+  if (err instanceof ConflictError) {
+    return res.status(err.statusCode).json({
+      error: err.message,
+      code: err.code,
     });
   }
 
