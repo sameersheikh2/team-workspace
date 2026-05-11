@@ -1,3 +1,4 @@
+import userRepository from "../repository/userRepository.js";
 import workspaceRepo from "../repository/workspaceRepository.js";
 import {
   AuthorizationError,
@@ -30,6 +31,7 @@ class WorkspaceService {
         },
       ],
     });
+    await userRepository.findByIdAndUpdate(ownerId, { isOnboarded: true });
 
     return workspace;
   }
@@ -42,10 +44,6 @@ class WorkspaceService {
     }
 
     const workspaces = await workspaceRepo.findAllByUser(userId);
-
-    if (!workspaces || workspaces.length === 0) {
-      throw new NotFoundError("Workspace");
-    }
 
     return workspaces;
   }

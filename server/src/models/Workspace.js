@@ -16,7 +16,7 @@ const WorkspaceSchema = new mongoose.Schema(
           required: true,
         },
         role: { type: String, enum: ["owner", "admin", "member"] },
-        joinedAt: { type: Date, default: Date.now() },
+        joinedAt: { type: Date, default: Date.now },
       },
     ],
     isDeleted: { type: Boolean, default: false },

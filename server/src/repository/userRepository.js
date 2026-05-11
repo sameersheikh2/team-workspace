@@ -18,6 +18,14 @@ class UserRepository {
     return User.findById(id);
   }
 
+  findByIdAndUpdate(id, updateData) {
+    return User.findOneAndUpdate(
+      { _id: id },
+      { $set: updateData },
+      { new: true },
+    );
+  }
+
   async comparePassword(userId, userPassword) {
     const user = await User.findById(userId).select("+password");
     if (!user) return false;
