@@ -8,6 +8,6 @@ const router = express.Router();
 router.post("/register", asyncWrapper(authController.register));
 router.post("/login", asyncWrapper(authController.login));
 router.post("/logout", auth, asyncWrapper(authController.logout));
-router.post("/refresh", asyncWrapper(authController.refresh));
+router.get("/refresh", asyncWrapper(authController.refresh));
 
 export default router;

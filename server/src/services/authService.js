@@ -14,7 +14,7 @@ class AuthService {
       });
     }
 
-    if (!["admin", "member"].includes(role)) {
+    if (!["user"].includes(role)) {
       throw new ValidationError("Validation failed.", {
         role: "Role does not exist.",
       });
@@ -63,7 +63,10 @@ class AuthService {
 
     try {
       const decoded = jwt.verify(token, config.jwtRefreshSecret);
-      const newAccessToken = this.generateAccessToken(decoded);
+      const newAccessToken = this.generateAccessToken({
+        _id: decoded.id,
+        role: decoded.role,
+      });
       return newAccessToken;
     } catch (err) {
       if (err.name === "TokenExpiredError") {

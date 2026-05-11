@@ -28,19 +28,9 @@ class AuthController {
 
   async refresh(req, res) {
     const token = req.cookies.refreshToken;
-    const accessToken = authService.refreshAccessToken(token);
+    const accessToken = await authService.refreshAccessToken(token);
     return successResponse(res, { accessToken }, "Access token refreshed", 200);
   }
 }
 
 export default new AuthController();
-
-//intro
-//star method
-//prep method
-
-//technical topics
-//mahendra --> closure
-//aditya --> joins
-//aman -->  event loop
-//ashutosh -->

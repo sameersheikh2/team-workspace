@@ -13,5 +13,3 @@ async function connectDB() {
   }
 }
 export default connectDB;
-
-// period of personal devlopment
